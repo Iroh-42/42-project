@@ -12,83 +12,83 @@
 
 #include "ft_printf.h"
 
-static int	check_itoa(va_list list, char format, int *nb_write_char)
+static int	format_base(va_list list, char format, int *written_count)
 {
-	char			*str;
-	unsigned long	nbr;
+	char	*num_str;
+	void	*ptr;
 
-	str = NULL;
+	num_str = NULL;
 	if (format == 'p')
 	{
-		nbr = va_arg(list, unsigned long);
-		if (!nbr)
+		ptr = va_arg(list, void *);
+		if (!ptr)
 		{
-			*nb_write_char += ft_putstr_fd("(nil)", 1);
-			return (*nb_write_char);
+			*written_count += ft_putstr_fd("(nil)", 1);
+			return (*written_count);
 		}
-		str = ft_itoa_base(nbr, BASE_HEX_MIN);
-		*nb_write_char += ft_putstr_fd("0x", 1);
+		num_str = ft_itoa_base((unsigned long)ptr, BASE_HEX_MIN);
+		*written_count += ft_putstr_fd("0x", 1);
 	}
 	else if (format == 'x')
-		str = ft_itoa_base(va_arg(list, unsigned int), BASE_HEX_MIN);
+		num_str = ft_itoa_base(va_arg(list, unsigned int), BASE_HEX_MIN);
 	else if (format == 'X')
-		str = ft_itoa_base(va_arg(list, unsigned int), BASE_HEX_MAX);
-	*nb_write_char += ft_putstr_fd(str, 1);
-	free (str);
-	return (*nb_write_char);
+		num_str = ft_itoa_base(va_arg(list, unsigned int), BASE_HEX_MAX);
+	*written_count += ft_putstr_fd(num_str, 1);
+	free(num_str);
+	return (*written_count);
 }
 
-static int	next_pourcent(va_list list, const char *format, int *nb_write_char)
+static int	print_arg(va_list list, const char *format, int *written_count)
 {
-	char	*str;
-	char	*ptr;
+	char	*num_str;
+	char	*arg_str;
 
 	if (format[0] == 'c')
-		*nb_write_char += ft_putchar_fd(va_arg(list, unsigned int), 1);
+		*written_count += ft_putchar_fd(va_arg(list, unsigned int), 1);
 	else if (format[0] == 's')
 	{
-		ptr = va_arg(list, char *);
-		if (!ptr)
-			*nb_write_char += ft_putstr_fd("(null)", 1);
-		*nb_write_char += ft_putstr_fd(ptr, 1);
+		arg_str = va_arg(list, char *);
+		if (!arg_str)
+			return (*written_count += ft_putstr_fd("(null)", 1));
+		*written_count += ft_putstr_fd(arg_str, 1);
 	}
 	else if (format[0] == 'i' || format[0] == 'd')
-		ft_putnbr_fd(va_arg(list, int), 1, nb_write_char);
+		ft_putnbr_fd(va_arg(list, int), 1, written_count);
 	else if (format[0] == 'u')
 	{
-		str = ft_itoa_base(va_arg(list, unsigned int), BASE_DEC);
-		*nb_write_char += ft_putstr_fd(str, 1);
+		num_str = ft_itoa_base(va_arg(list, unsigned int), BASE_DEC);
+		*written_count += ft_putstr_fd(num_str, 1);
+		free(num_str);
 	}
 	else if (format[0] == 'p' || format[0] == 'x' || format[0] == 'X')
-		check_itoa(list, format[0], nb_write_char);
+		format_base(list, format[0], written_count);
 	else if (format[0] == '%')
-		*nb_write_char += ft_putchar_fd('%', 1);
-	return (*nb_write_char);
-
+		*written_count += ft_putchar_fd('%', 1);
+	return (*written_count);
 }
 
 int	ft_printf(const char *format, ...)
 {
-	int				i;
-	int				nb_write_char;
+	int				idx;
+	int				written_count;
 	va_list			list;
 
-	i = 0;
-	nb_write_char = 0;
+	idx = 0;
+	written_count = 0;
 	va_start(list, format);
-	while (format[i] != '\0')
+	while (format[idx] != '\0')
 	{
-		if (format[i] == '%')
+		if (format[idx] == '%')
 		{
-			next_pourcent(list, &format[++i], &nb_write_char);
-			i++;
+			print_arg(list, &format[++idx], &written_count);
+			idx++;
 		}
 		else
 		{
-			nb_write_char += ft_putchar_fd(format[i], 1);
-			i++;
+			written_count += ft_putchar_fd(format[idx], 1);
+			idx++;
 		}
 	}
 	va_end(list);
-	return (nb_write_char);
+	return (written_count);
 }

@@ -19,15 +19,15 @@
 # include <stdarg.h>
 # include <unistd.h>
 # include <stdlib.h>
-#include <stdio.h>
+# include <stdio.h>
 
 void	ft_bzero(void *s, size_t n);
 int		ft_putchar_fd(char c, int fd);
 void	*ft_calloc(size_t nmemb, size_t size);
-char	*ft_itoa_base(unsigned long n, char *base);
+char	*ft_itoa_base(unsigned long n, const char *base);
 int		ft_printf(const char *format, ...);
-int		ft_putnbr_fd(int n, int fd, int *nb_write_char);
-int		ft_putstr_fd(char *s, int fd);
+int		ft_putnbr_fd(int n, int fd, int *written_count);
+int	    ft_putstr_fd(const char *s, int fd);
 size_t	ft_strlen(const char *s);
 
 #endif

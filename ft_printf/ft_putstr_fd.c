@@ -12,19 +12,14 @@
 
 #include "ft_printf.h"
 
-int	ft_putstr_fd(char *s, int fd)
+int	ft_putstr_fd(const char *s, int fd)
 {
-	int		i;
-	int		j;
+	ssize_t	written;
 
-	i = 0;
-	j = 0;
 	if (!s)
 		return (0);
-	while (s[i] != '\0')
-	{
-		j += write(fd, &s[i], 1);
-		i++;
-	}
-	return (j);
+	written = write(fd, s, ft_strlen(s));
+	if (written < 0)
+		return (0);
+	return ((int)written);
 }

@@ -3,13 +3,10 @@
 
 int main (int ac, char **av)
 {
-	int nbr1;
-	int nbr2;
+
 	int count_char1;
 	int count_char2;
 
-	nbr1 = 0;
-	nbr2 = 0;
 	count_char1 = 0;
 	count_char2 = 0;
 	if (ac > 1)
@@ -26,7 +23,7 @@ int main (int ac, char **av)
 		ft_printf("u = %u\n", atoi(av[1]));
 		ft_printf("x = %x\n", atoi(av[1]));
 		ft_printf("X = %X\n", atoi(av[1]));
-		ft_printf("end %%\n ************* \ndebut printf");
+		ft_printf("end %%\n ************* \ndebut printf\n");
 
 		count_char2 = printf("c = %c\n", 'a');
 		printf("s = %s\n", av[1]);
