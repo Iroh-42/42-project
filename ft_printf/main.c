@@ -14,11 +14,11 @@ int main (int ac, char **av)
 		char *ptr = NULL;
 		ft_printf("debut ft_printf\n");
 		count_char1 = ft_printf("c = %c\n", 'a');
-		ft_printf("s = %s\n", av[1]);
+		ft_printf("s = %k \n", av[1]);
 		ft_printf("s null = %s\n", ptr);
 		ft_printf("p = %p\n", av[1]);
 		ft_printf("p null = %p\n", ptr);
-		ft_printf("d = %d\n", atoi(av[1]));
+		ft_printf("d = %d\n", 11);
 		ft_printf("i = %i\n", atoi(av[1]));
 		ft_printf("u = %u\n", atoi(av[1]));
 		ft_printf("x = %x\n", atoi(av[1]));
@@ -26,7 +26,7 @@ int main (int ac, char **av)
 		ft_printf("end %%\n ************* \ndebut printf\n");
 
 		count_char2 = printf("c = %c\n", 'a');
-		printf("s = %s\n", av[1]);
+		printf("s = %k\n", av[1]);
 		printf("s null = %s\n", ptr);
 		printf("p = %p\n", av[1]);
 		printf("p null = %p\n", ptr);

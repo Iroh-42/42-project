@@ -1,7 +1,7 @@
 .SILENT:
 
 # Ouput name
-NAME = libft.a
+NAME = libftprintf.a
 OBJ_DIR = Objects
 
 #SOURCES
@@ -32,7 +32,6 @@ CFLAGS = -Wall -Wextra -Werror
 
 #object name
 OBJECTS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
-BONUS_OBJECTS = $(LST:%.c=$(OBJ_DIR)/%.o)
 #Rules
 
 all : $(NAME)
@@ -55,7 +54,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
-
-#bonus rules
-bonus: $(BONUS_OBJECTS)
-	ar -rcs $(NAME) $(BONUS_OBJECTS)
