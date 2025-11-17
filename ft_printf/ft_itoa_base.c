@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 09:55:47 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/14 14:52:25 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/17 09:24:16 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ char	*ft_itoa_base(unsigned long nbr, const char *base)
 	size_t			len_base;
 	char			*str_nb;
 
-	if (!base)
-		return (NULL);
 	len_base = ft_strlen(base);
 	digits_count = int_len(nbr, len_base);
 	str_nb = ft_calloc(digits_count + 1, sizeof(char));
