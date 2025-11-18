@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:10 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/17 16:33:50 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/18 13:40:11 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,31 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
+	if (!s)
+		return (0);
 	i = 0;
-	while (s[i] != '\0' || s[i] == '\n')
+	while (s[i] != '\0' && s[i] != '\n')
 		i++;
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2, size_t size)
+char	*ft_strjoin(char *s1, char const *s2, size_t size)
 {
 	char	*strcat;
 
-	if (!s1 || !s2)
-		return (NULL);
+	if (!s1)
+		s1 = ft_calloc(1, sizeof(char));
+	if (!s2)
+		s2 = "";
 	if (ft_strlen(s2) > 0)
-		size = ft_strlen(s2);
+		size = ft_strlen(s2) + 1;
 	size = ft_strlen(s1) + size + 1;
 	strcat = ft_calloc(size, sizeof(char));
 	if (strcat == NULL)
 		return (0);
 	ft_strlcpy(strcat, s1, ft_strlen(s1) + 1);
 	ft_strlcat(strcat, s2, size);
+	free(s1);
 	return (strcat);
 }
 
@@ -49,7 +54,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	if ((!dst || !src) && !size)
 		return (0);
 	len_dest = ft_strlen((const char *)dst);
-	len_src = ft_strlen(src);
+	len_src = ft_strlen(src) + 1;
 	if (size == 0)
 		return (len_src);
 	if (len_dest == size - 1)
@@ -58,7 +63,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 		return (size + len_src);
 	else
 	{
-		while ((src[i] != '\0' || src[i] != '\n') && len_dest + i < size - 1)
+		while ((src[i] != '\0') && len_dest + i < size - 1)
 		{
 			dst[len_dest + i] = src[i];
 			i++;

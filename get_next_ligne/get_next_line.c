@@ -6,30 +6,13 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:13 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/17 17:00:00 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/18 13:41:00 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-static char	*ft_strdup(const char *s, size_t len)
-{
-	size_t	j;
-	char	*copy;
-
-	j = 0;
-	copy = ft_calloc(len, (sizeof(char)));
-	if (copy == NULL)
-		return (NULL);
-	while (j < len)
-	{
-		copy[j] = s[j];
-		j++;
-	}
-	copy[j] = '\0';
-	return (copy);
-}
 
 static void	ft_bzero(void *s, size_t n)
 {
@@ -45,28 +28,18 @@ static void	ft_bzero(void *s, size_t n)
 	}
 }
 
-static char	*untruc(size_t *start, size_t *end, char *stack,
-		t_bool jesuisnathan)
+static char	*untruc(size_t *start, size_t *end, char *stack, char *str)
 {
-	char	*str;
-
-	while (jesuisnathan)
+	while (*end <= BUFFER_SIZE)
 	{
-		while (*start <= BUFFER_SIZE && jesuisnathan)
+		if (stack[*end + *start] == '\n' || stack[*end + *start] == '\0')
 		{
-			if (stack[*end + *start] == '\n' || stack[*end + *start] == '\0')
-			{
-				jesuisnathan = 0;
-				break ;
-			}
-			*end = *end + 1;
+			break ;
 		}
 		*end = *end + 1;
-		if (jesuisnathan == 0)
-			str = ft_strdup(&stack[*start], *end);
-		else
-			ft_strjoin(str, &stack[*start], *end);
 	}
+	*end = *end + 1;
+	str = ft_strjoin(str, &stack[*start], *end);
 	return (str);
 }
 
@@ -74,14 +47,13 @@ char	*get_next_line(int fd)
 {
 	static size_t	end;
 	static size_t	start;
-	static char		stack[BUFFER_SIZE]; // taille du seau
-	char			*str; //pisicne
-	t_bool			jesuisnathan;
+	static char		stack[BUFFER_SIZE];
+	char			*str;
 
-	jesuisnathan = 1;
+	str = NULL;
 	if (stack[0] == '\0')
 	{
-		if (read(fd, stack, BUFFER_SIZE) == 0) // si la citerne est vide
+		if (read(fd, stack, BUFFER_SIZE) == 0)
 			return (NULL);
 	}
 	else
@@ -89,13 +61,26 @@ char	*get_next_line(int fd)
 	end = 0;
 	if (start >= BUFFER_SIZE)
 	{
-		ft_bzero(stack, BUFFER_SIZE); // vide le seau
+		ft_bzero(stack, BUFFER_SIZE);
+		end = 0;
+		start = 0;
 		if (read(fd, stack, BUFFER_SIZE) == 0)
 			return (NULL);
-		start = end;
 	}
-	str = untruc(&start, &end, stack, jesuisnathan);
-	while (str[ft_strlen(str) - 1] != '\n')
-		str = untruc(&start, &end, stack, jesuisnathan);
+	str = untruc(&start, &end, stack, str);
+
+	while (str[ft_strlen(str)] != '\n')
+	{
+		start += end;
+		if (start >= BUFFER_SIZE)
+		{
+			ft_bzero(stack, BUFFER_SIZE);
+			end = 0;
+			start = 0;
+			if (read(fd, stack, BUFFER_SIZE) == 0)
+				return (str);
+		}
+		str = untruc(&start, &end, stack, str);
+	}
 	return (str);
 }
