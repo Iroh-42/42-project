@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:16 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/18 13:40:22 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/19 12:50:44 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE	4
+#  define BUFFER_SIZE	42
 # endif
 
 # include <fcntl.h>

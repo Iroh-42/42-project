@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:10 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/18 13:40:11 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/19 13:35:39 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ size_t	ft_strlen(const char *s)
 	i = 0;
 	while (s[i] != '\0' && s[i] != '\n')
 		i++;
+	if (s[i] == '\n')
+		i++;
 	return (i);
 }
 
@@ -29,11 +31,13 @@ char	*ft_strjoin(char *s1, char const *s2, size_t size)
 	char	*strcat;
 
 	if (!s1)
+	{
 		s1 = ft_calloc(1, sizeof(char));
+		if (!s1)
+			return (NULL);
+	}
 	if (!s2)
 		s2 = "";
-	if (ft_strlen(s2) > 0)
-		size = ft_strlen(s2) + 1;
 	size = ft_strlen(s1) + size + 1;
 	strcat = ft_calloc(size, sizeof(char));
 	if (strcat == NULL)
