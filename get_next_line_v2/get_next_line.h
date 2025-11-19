@@ -28,10 +28,14 @@ typedef struct s_data_keep
 	char	stack[BUFFER_SIZE + 1];
 	int		fd;
 	size_t	kp_i;
+	ssize_t	bytes; // Champ 'bytes' : nombre d'octets valides actuellement
+				   // stockés dans `stack` après un appel à read(). Nécessaire pour
+				   // savoir combien d'octets du tampon sont valides (surtout si le
+				   // dernier read a retourné moins que BUFFER_SIZE).
 }	t_data_keep;
 
 size_t	ft_strlen(const char *s);
-char	*ft_strjoin(char *s1, char const *s2, size_t size);
+char	*ft_strnjoin(char *s1, const char *s2, size_t n);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 void	*ft_calloc(size_t nmemb, size_t size);

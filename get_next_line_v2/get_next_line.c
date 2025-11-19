@@ -11,83 +11,94 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-
-// static void	ft_bzero(void *s, size_t n)
-// {
-// 	unsigned int	i;
-// 	char			*temp;
-
-// 	i = 0;
-// 	temp = s;
-// 	while (i < n)
-// 	{
-// 		temp[i] = 0;
-// 		i++;
-// 	}
-// }
-
-static char	*ft_strdup(const char *s, size_t len_line)
+/* Remplit le buffer pour le fd s'il est vide. Retourne :
+   >0  : nombre d'octets lus (ou 1 si le buffer était déjà non vide),
+   0   : EOF,
+   -1  : erreur de lecture. */
+static ssize_t	read_buffer(t_data_keep *data, int fd)
 {
-	size_t		i;
-	char	*copy;
+    ssize_t bytes_read;
 
-	i = 0;
-
-	copy = ft_calloc(len_line + 1, (sizeof(char)));
-	if (copy == NULL)
-		return (NULL);
-	while (i <= len_line)
-	{
-		copy[i] = s[i];
-		i++;
-	}
-	copy[i] = '\0';
-	return (copy);
+    if (data->kp_i >= (size_t)data->bytes)
+    {
+        bytes_read = read(fd, data->stack, BUFFER_SIZE);
+        if (bytes_read <= 0)
+            return (bytes_read);
+        data->bytes = bytes_read;
+        data->stack[data->bytes] = '\0';
+        data->kp_i = 0;
+        data->fd = fd;
+        return (bytes_read);
+    }
+    return (1);
 }
 
-static char	*cpy_line(t_data_keep *data, size_t len_line,
-	int fd, t_bool is_new_line)
+static void	len_new_line(t_data_keep *data, size_t *len, int *has_newline)
 {
-	int		i;
-	char	*line;
-
-	line = NULL;
-	i = 0;
-	if (is_new_line)
-	{
-		line = ft_strdup(&data->stack[data->kp_i], len_line);
-		data->kp_i = len_line;
-	}
+	size_t l = 0;
+	while (data->kp_i + l < (size_t)data->bytes && data->stack[data->kp_i + l] != '\n')
+		l++;
+	*len = l;
+	if (data->kp_i + l < (size_t)data->bytes && data->stack[data->kp_i + l] == '\n')
+		*has_newline = 1;
 	else
+		*has_newline = 0;
+}
+
+/* Concatène len (+1 si has_nl) octets du buffer au résultat existant. */
+static char *append_chunk(char *result, t_data_keep *data, size_t len, int has_newline)
+{
+	size_t add;
+
+	if (has_newline)
+		add = 1;
+	else
+		add = 0;
+	result = ft_strnjoin(result, &data->stack[data->kp_i], len + add);
+	return (result);
+}
+
+/* Avance kp_i du nombre d'octets consommés et réinitialise si nécessaire. */
+static void	advance_pos(t_data_keep *data, size_t len, int has_newline)
+{
+	size_t add;
+
+	if (has_newline)
+		add = 1;
+	else
+		add = 0;
+	data->kp_i += len + add;
+	if (data->kp_i >= (size_t)data->bytes)
 	{
-		read(fd, data->stack, BUFFER_SIZE);
-		line = ft_strdup(&data->stack[data->kp_i], len_line);
-		data->kp_i += len_line;
+		data->kp_i = 0;
+		data->bytes = 0;
+		data->stack[0] = '\0';
 	}
-	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_data_keep	data;
-	size_t				len_line;
-	char				*line;
-	t_bool				is_new_line;
+	static t_data_keep	data_store[1024]; /* stockage par fd (supporte multi-fd) */
+	char           *result;
+	ssize_t        bytes_read;
+	size_t         len;
+	int            has_newline;
 
-	is_new_line = 0;
-	len_line = 0;
-	line = NULL;
+	has_newline = 0;
 	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (data.stack[0] == '\0')
-		read(fd, data.stack, BUFFER_SIZE);
-	while (data.stack[len_line] != '\n' && data.stack[len_line] != '\0'
-		&& len_line <= BUFFER_SIZE)
-		len_line++;
-	if (data.stack[len_line] == '\n')
-		is_new_line = 1;
-	line = cpy_line(&data, len_line, fd, is_new_line);
-	return (line);
+	result = NULL;
+	while (!has_newline)
+	{
+		bytes_read = read_buffer(&data_store[fd], fd);
+		if (bytes_read <= 0)
+			break; /* EOF or error */
+		len_new_line(&data_store[fd], &len, &has_newline);
+		result = append_chunk(result, &data_store[fd], len, has_newline);
+		if (!result)
+			return (NULL);
+		advance_pos(&data_store[fd], len, has_newline);
+	}
+	return (result);
 }
