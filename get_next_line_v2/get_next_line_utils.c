@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:10 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/19 10:15:17 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/20 10:13:49 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,56 +19,37 @@ size_t	ft_strlen(const char *s)
 	if (!s)
 		return (0);
 	i = 0;
-	while (s[i] != '\0' && s[i] != '\n')
+	while (s[i] != '\0')
 		i++;
 	return (i);
 }
 
-char	*ft_strjoin(char *s1, char const *s2, size_t size)
+char	*ft_strnjoin(char *s1, const char *s2, size_t n)
 {
-	char	*strcat;
+	char	*str_cat;
+	size_t	len1;
+	size_t	i;
 
-	if (!s1)
-		s1 = ft_calloc(1, sizeof(char));
-	if (!s2)
-		s2 = "";
-	strcat = ft_calloc(size, sizeof(char));
-	if (strcat == NULL)
-		return (0);
-	ft_strlcpy(strcat, s1, ft_strlen(s1) + 1);
-	ft_strlcat(strcat, s2, size);
-	free(s1);
-	return (strcat);
-}
-
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
-{
-	size_t			len_dest;
-	size_t			len_src;
-	unsigned int	i;
-
-	i = 0;
-	if ((!dst || !src) && !size)
-		return (0);
-	len_dest = ft_strlen((const char *)dst);
-	len_src = ft_strlen(src) + 1;
-	if (size == 0)
-		return (len_src);
-	if (len_dest == size - 1)
-		return (len_dest + len_src);
-	else if (len_dest > size - 1)
-		return (size + len_src);
+	if (s1)
+		len1 = ft_strlen(s1);
 	else
+		len1 = 0;
+	str_cat = ft_calloc(len1 + n + 1, sizeof(char));
+	if (!str_cat)
+		return (NULL);
+	if (s1)
+		ft_strlcpy(str_cat, s1, len1 + 1);
+	i = 0;
+	while (i < n)
 	{
-		while ((src[i] != '\0') && len_dest + i < size - 1)
-		{
-			dst[len_dest + i] = src[i];
-			i++;
-		}
-		dst[len_dest + i] = '\0';
-		return (len_src + len_dest);
+		str_cat[len1 + i] = s2[i];
+		i++;
 	}
+	str_cat[len1 + i] = '\0';
+	free(s1);
+	return (str_cat);
 }
+
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
@@ -79,7 +60,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	i = 0;
 	if (size == 0)
 		return (len);
-	while ((src[i] != '\0' || src[i] == '\n') && i < (size - 1))
+	while ((src[i] != '\0') && i < (size - 1))
 	{
 		dst[i] = src[i];
 		i++;

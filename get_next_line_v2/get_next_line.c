@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:13 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/19 16:46:51 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/20 11:55:07 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,24 @@
 #include <stdio.h>
 
 
-// static void	ft_bzero(void *s, size_t n)
-// {
-// 	unsigned int	i;
-// 	char			*temp;
+static void	ft_bzero(void *s, size_t n)
+{
+	unsigned int	i;
+	char			*temp;
 
-// 	i = 0;
-// 	temp = s;
-// 	while (i < n)
-// 	{
-// 		temp[i] = 0;
-// 		i++;
-// 	}
-// }
+	i = 0;
+	temp = s;
+	while (i < n)
+	{
+		temp[i] = 0;
+		i++;
+	}
+}
 
 static char	*ft_strdup(const char *s, size_t len_line)
 {
 	size_t		i;
-	char	*copy;
+	char		*copy;
 
 	i = 0;
 
@@ -47,47 +47,52 @@ static char	*ft_strdup(const char *s, size_t len_line)
 	return (copy);
 }
 
-static char	*cpy_line(t_data_keep *data, size_t len_line,
-	int fd, t_bool is_new_line)
+char	*ft_strchr(const char *s, int c)
 {
-	int		i;
-	char	*line;
+	int	i;
 
-	line = NULL;
 	i = 0;
-	if (is_new_line)
+	while (s[i] != '\0')
 	{
-		line = ft_strdup(&data->stack[data->kp_i], len_line);
-		data->kp_i = len_line;
+		if (s[i] == (char)c)
+		{
+			i++;
+			return ((char *) &s[i]);
+		}
+		i++;
 	}
-	else
-	{
-		read(fd, data->stack, BUFFER_SIZE);
-		line = ft_strdup(&data->stack[data->kp_i], len_line);
-		data->kp_i += len_line;
-	}
-	return (line);
+	if (s[i] == (char)c)
+		return ((char *) &s[i]);
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
 {
 	static t_data_keep	data;
-	size_t				len_line;
 	char				*line;
-	t_bool				is_new_line;
+	char				*temp_stack;
 
-	is_new_line = 0;
-	len_line = 0;
 	line = NULL;
-	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
-		return (NULL);
 	if (data.stack[0] == '\0')
-		read(fd, data.stack, BUFFER_SIZE);
-	while (data.stack[len_line] != '\n' && data.stack[len_line] != '\0'
-		&& len_line <= BUFFER_SIZE)
-		len_line++;
-	if (data.stack[len_line] == '\n')
-		is_new_line = 1;
-	line = cpy_line(&data, len_line, fd, is_new_line);
+		data.eof = read(fd, data.stack, BUFFER_SIZE);
+	while (!ft_strchr(data.stack, '\n'))
+	{
+		line = ft_strnjoin(line, data.stack, data.eof);
+		data.eof = read(fd, data.stack, BUFFER_SIZE);
+		if (!line)
+			return (NULL);
+		if (data.eof == 0)
+			return (line);
+	}
+	while (data.stack[data.kp_i] != '\n')
+		data.kp_i++;
+	line = ft_strnjoin(line, data.stack, data.kp_i + 1);
+	temp_stack = ft_strdup(data.stack, data.eof);
+	if (!temp_stack)
+		return (NULL);
+	ft_bzero(data.stack, data.eof);
+	ft_strlcpy(data.stack, ft_strchr(temp_stack, '\n'), data.eof - data.kp_i);
+	data.kp_i = 0;
+	free(temp_stack);
 	return (line);
 }
