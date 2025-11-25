@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:16 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/25 10:53:45 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/25 12:02:56 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE	10000000
+#  define BUFFER_SIZE	42
 # endif
 
 # include <fcntl.h>
@@ -25,7 +25,7 @@ typedef int	t_bool;
 
 typedef struct s_data_keep
 {
-	char	stack[BUFFER_SIZE + 1];
+	char	*stack;
 	int		fd;
 	size_t	kp_i;
 	ssize_t	eof;

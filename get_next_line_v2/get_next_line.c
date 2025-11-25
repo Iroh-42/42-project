@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:13 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/25 10:09:39 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/25 12:07:53 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	ft_bzero(void *s, size_t n)
 	}
 }
 
-static char	*ft_strdup(const char *s, size_t len_line)
+static char	*ft_strndup(const char *s, size_t len_line)
 {
 	size_t		i;
 	char		*copy;
@@ -51,7 +51,7 @@ static void	update_stack(t_data_keep *data)
 	size_t	len_cpy;
 
 	len_cpy = data->eof - data->kp_i;
-	t_stack = ft_strdup(data->stack, data->eof);
+	t_stack = ft_strndup(data->stack, data->eof);
 	if (!t_stack)
 		t_stack = NULL;
 	ft_bzero(data->stack, BUFFER_SIZE);
