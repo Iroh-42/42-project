@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:16 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/25 10:09:52 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/25 10:53:45 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE	10000000
@@ -26,9 +26,10 @@ typedef int	t_bool;
 typedef struct s_data_keep
 {
 	char	stack[BUFFER_SIZE + 1];
+	int		fd;
 	size_t	kp_i;
 	ssize_t	eof;
-}	t_data_keep;
+}	t_data_keep[1024];
 
 size_t	ft_strlen(const char *s);
 char	*ft_strnjoin(char *s1, char const *s2, size_t size);

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:13 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/25 10:09:39 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/25 10:42:49 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdio.h>
 
 static void	ft_bzero(void *s, size_t n)
@@ -45,7 +45,7 @@ static char	*ft_strdup(const char *s, size_t len_line)
 	return (copy);
 }
 
-static void	update_stack(t_data_keep *data)
+static void	update_stack(t_data_keep data)
 {
 	char	*t_stack;
 	size_t	len_cpy;
@@ -60,7 +60,7 @@ static void	update_stack(t_data_keep *data)
 	free(t_stack);
 }
 
-static char	*extract_line(t_data_keep *data, char *line, int fd)
+static char	*extract_line(t_data_keep data, char *line, int fd)
 {
 	while (!ft_strchr(data->stack, '\n'))
 	{
@@ -91,12 +91,12 @@ char	*get_next_line(int fd)
 	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = NULL;
-	if (data.stack[0] == '\0')
+	if (data[fd].stack[0] == '\0')
 	{
-		data.eof = read(fd, data.stack, BUFFER_SIZE);
-		if (data.eof == 0 || data.eof == -1)
+		data[fd].eof = read(fd, data[fd].stack, BUFFER_SIZE);
+		if (data[fd].eof == 0 || data[fd].eof == -1)
 			return (NULL);
 	}
-	line = extract_line(&data, line, fd);
+	line = extract_line(&data[fd], line, fd);
 	return (line);
 }
