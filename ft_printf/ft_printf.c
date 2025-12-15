@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:15:19 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/17 13:29:27 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/24 09:57:12 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	format_base(va_list list, char format, int *written_count)
 	return (*written_count);
 }
 
-static int	print_arg(va_list list, const char *format, int *written_count)
+static int	after_pourcent(va_list list, const char *format, int *written_count)
 {
 	char	*num_str;
 	char	*arg_str;
@@ -80,7 +80,7 @@ int	ft_printf(const char *format, ...)
 	{
 		if (format[idx] == '%')
 		{
-			print_arg(list, &format[++idx], &written_count);
+			after_pourcent(list, &format[++idx], &written_count);
 			idx++;
 		}
 		else

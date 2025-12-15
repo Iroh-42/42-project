@@ -6,7 +6,7 @@
 /*   By: gacattan <gacattan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:14:54 by gacattan          #+#    #+#             */
-/*   Updated: 2025/11/17 09:34:55 by gacattan         ###   ########.fr       */
+/*   Updated: 2025/11/17 09:26:57 by gacattan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <unistd.h>
 # include <stdlib.h>
 
-int		ft_printf(const char *format, ...);
 void	ft_bzero(void *s, size_t n);
 int		ft_putchar_fd(char c, int fd);
 void	*ft_calloc(size_t nmemb, size_t size);
